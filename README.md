@@ -1,4 +1,4 @@
-# sysHacker
+# pythonSysHacker
 Get access into the victim's system using python code
 
 attacker.py  :  This is the listening python code. we have to provide the listening port and ip address of the victim machine. (listening ip : 0.0.0.0 [default])
